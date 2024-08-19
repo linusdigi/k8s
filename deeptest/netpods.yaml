@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx1
+  labels:
+   env: prod
+spec:
+ containers:
+  - name: nginx
+    image: quay.io/gauravkumar9130/nginxdemo
+    ports:
+     - containerPort: 80
+    securityContext:
+      capabilities:
+       add: ["NET_RAW"]
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx2
+  labels:
+   env: db
+spec:
+ containers:
+  - name: nginx
+    image: quay.io/gauravkumar9130/nginxdemo
+    ports:
+     - containerPort: 80
+    securityContext:
+      capabilities:
+       add: ["NET_RAW"]
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx3
+  labels:
+   env: test
+spec:
+ containers:
+  - name: nginx
+    image: quay.io/gauravkumar9130/nginxdemo
+    ports:
+     - containerPort: 80
+    securityContext:
+      capabilities:
+       add: ["NET_RAW"]

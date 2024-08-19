@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+  labels:
+    app: nginx
+spec:
+  ports:
+  - port: 3306
+    name: web
+  clusterIP: None
+  selector:
+    app: nginx
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql
+spec:
+  selector:
+    matchLabels:
+      app: nginx # has to match .spec.template.metadata.labels
+  serviceName: "mysql"
+  replicas: 3 # by default is 1
+  minReadySeconds: 10 # by default is 0
+  template:
+    metadata:
+      labels:
+        app: nginx # has to match .spec.selector.matchLabels
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: nginx
+        image: quay.io/gauravkumar9130/mysql
+        env:
+         - name: MYSQL_ROOT_PASSWORD
+           value: redhat
+  volumeClaimTemplates:
+  - metadata:
+      name: mysql-vol
+    spec:
+      accessModes: [ "ReadWriteMany" ]
+      storageClassName: "manual"
+      resources:
+        requests:
+          storage: 500Mi
